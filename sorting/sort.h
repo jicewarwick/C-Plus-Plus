@@ -144,26 +144,36 @@ void MergeSort(int* arr, int l, int r) {
 }
 
 // Heap Sort
-void convertHeap(int* arr, int n, int x) {
-    int largest = x;
-    int left = 2 * x + 1;
-    int right = 2 * x + 2;
+void Heapify(int* arr, int n, int root) {
+    int largest = root;	// Initialize largest as root
+    int l = 2 * root + 1;	// left = 2*i + 1
+    int r = 2 * root + 2;	// right = 2*i + 2
 
-    if (left < n && arr[left] > arr[largest]) largest = left;
+    // If left child is larger than root
+    if (l < n && arr[l] > arr[largest]) largest = l;
 
-    if (right < n && arr[right] > arr[largest]) largest = right;
+    // If right child is larger than largest so far
+    if (r < n && arr[r] > arr[largest]) largest = r;
 
-    if (largest != x) {
-        std::swap(arr[x], arr[largest]);
-        convertHeap(arr, n, largest);
+    // If largest is not root
+    if (largest != root) {
+        std::swap(arr[root], arr[largest]);
+
+        // Recursively heapify the affected sub-tree
+        Heapify(arr, n, largest);
     }
 }
 void HeapSort(int* arr, int n) {
-    for (int i = n / 2 - 1; i >= 0; i--) convertHeap(arr, n, i);
+    // Build heap (rearrange array)
+    for (int i = n / 2 - 1; i >= 0; i--) Heapify(arr, n, i);
 
-    for (int i = n - 1; i >= 0; i--) {
+    // One by one extract an element from heap
+    for (int i = n - 1; i > 0; i--) {
+        // Move current root to end
         std::swap(arr[0], arr[i]);
-        convertHeap(arr, i, 0);
+
+        // call max heapify on the reduced heap
+        Heapify(arr, i, 0);
     }
 }
 
